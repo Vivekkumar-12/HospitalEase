@@ -1,9 +1,17 @@
-<!DOCTYPE html>
-<?php 
-include('func.php');  
-include('newfunc.php');
+<?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 $con=mysqli_connect("localhost","root","","myhmsdb");
 
+if(!isset($_SESSION['pid'])) {
+    header("Location: index.php");
+    exit();
+}
+$pid = $_SESSION['pid'];
+
+include('func.php');  
+include('newfunc.php');
 
   $pid = $_SESSION['pid'];
   $username = $_SESSION['username'];
@@ -17,20 +25,18 @@ $con=mysqli_connect("localhost","root","","myhmsdb");
 
 if(isset($_POST['app-submit']))
 {
-  $pid = $_SESSION['pid'];
+  $pid = (int)$_SESSION['pid'];
   $username = $_SESSION['username'];
   $email = $_SESSION['email'];
-  $fname = $_SESSION['fname'];
-  $lname = $_SESSION['lname'];
-  $gender = $_SESSION['gender'];
-  $contact = $_SESSION['contact'];
-  $doctor=$_POST['doctor'];
-  $email=$_SESSION['email'];
-  # $fees=$_POST['fees'];
-  $docFees=$_POST['docFees'];
+  $fname = mysqli_real_escape_string($con, $_SESSION['fname']);
+  $lname = mysqli_real_escape_string($con, $_SESSION['lname']);
+  $gender = mysqli_real_escape_string($con, $_SESSION['gender']);
+  $contact = mysqli_real_escape_string($con, $_SESSION['contact']);
+  $doctor = mysqli_real_escape_string($con, $_POST['doctor']);
+  $docFees = (int)$_POST['docFees'];
 
-  $appdate=$_POST['appdate'];
-  $apptime=$_POST['apptime'];
+  $appdate = $_POST['appdate'];
+  $apptime = $_POST['apptime'];
   $cur_date = date("Y-m-d");
   date_default_timezone_set('Asia/Kolkata');
   $cur_time = date("H:i:s");
@@ -42,14 +48,33 @@ if(isset($_POST['app-submit']))
       $check_query = mysqli_query($con,"select apptime from appointmenttb where doctor='$doctor' and appdate='$appdate' and apptime='$apptime'");
 
         if(mysqli_num_rows($check_query)==0){
-          $query=mysqli_query($con,"insert into appointmenttb(pid,fname,lname,gender,email,contact,doctor,docFees,appdate,apptime,userStatus,doctorStatus) values($pid,'$fname','$lname','$gender','$email','$contact','$doctor','$docFees','$appdate','$apptime','1','1')");
-
-          if($query)
-          {
-            echo "<script>alert('Your appointment successfully booked');</script>";
-          }
-          else{
-            echo "<script>alert('Unable to process your request. Please try again!');</script>";
+          $stmt = mysqli_prepare($con, "INSERT INTO appointmenttb (pid, fname, lname, gender, email, contact, doctor, docFees, appdate, apptime, userStatus, doctorStatus) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 1)");
+          
+          if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "issssssdss", 
+              $pid,
+              $fname,
+              $lname,
+              $gender,
+              $email,
+              $contact,
+              $doctor,
+              $docFees,
+              $appdate,
+              $apptime
+            );
+            
+            $result = mysqli_stmt_execute($stmt);
+            
+            if($result) {
+              echo "<script>alert('Your appointment successfully booked');</script>";
+            } else {
+              echo "<script>alert('Unable to process your request. Error: " . mysqli_stmt_error($stmt) . "');</script>";
+            }
+            
+            mysqli_stmt_close($stmt);
+          } else {
+            echo "<script>alert('Unable to prepare statement. Error: " . mysqli_error($con) . "');</script>";
           }
       }
       else{
@@ -548,38 +573,36 @@ function get_specs(){
                     $query = "select doctor,ID,appdate,apptime,disease,allergy,prescription from prestb where pid='$pid';";
                     
                     $result = mysqli_query($con,$query);
-                    if(!$result){
-                      echo mysqli_error($con);
+                    if(!$result) {
+                        echo "Query Error: " . mysqli_error($con);
+                    } else {
+                        if(mysqli_num_rows($result) == 0) {
+                            echo "<tr><td colspan='8' class='text-center'>No prescriptions found</td></tr>";
+                        } else {
+                            while ($row = mysqli_fetch_array($result)){
+                                ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($row['doctor']);?></td>
+                                    <td><?php echo htmlspecialchars($row['ID']);?></td>
+                                    <td><?php echo htmlspecialchars($row['appdate']);?></td>
+                                    <td><?php echo htmlspecialchars($row['apptime']);?></td>
+                                    <td><?php echo htmlspecialchars($row['disease']);?></td>
+                                    <td><?php echo htmlspecialchars($row['allergy']);?></td>
+                                    <td><?php echo htmlspecialchars($row['prescription']);?></td>
+                                    <td>
+                                        <form method="get">
+                                            <a href="admin-panel.php?ID=<?php echo $row['ID']?>">
+                                                <input type="hidden" name="ID" value="<?php echo $row['ID']?>"/>
+                                                <input type="submit" onclick="alert('Bill Paid Successfully');" 
+                                                       name="generate_bill" class="btn btn-success" value="Pay Bill"/>
+                                            </a>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <?php 
+                            }
+                        }
                     }
-                    
-
-                    while ($row = mysqli_fetch_array($result)){
-                  ?>
-                      <tr>
-                        <td><?php echo $row['doctor'];?></td>
-                        <td><?php echo $row['ID'];?></td>
-                        <td><?php echo $row['appdate'];?></td>
-                        <td><?php echo $row['apptime'];?></td>
-                        <td><?php echo $row['disease'];?></td>
-                        <td><?php echo $row['allergy'];?></td>
-                        <td><?php echo $row['prescription'];?></td>
-                        <td>
-                          <form method="get">
-                          <!-- <a href="admin-panel.php?ID=" 
-                              onClick=""
-                              title="Pay Bill" tooltip-placement="top" tooltip="Remove"><button class="btn btn-success">Pay</button>
-                              </a></td> -->
-
-                              <a href="admin-panel.php?ID=<?php echo $row['ID']?>">
-                              <input type ="hidden" name="ID" value="<?php echo $row['ID']?>"/>
-                              <input type = "submit" onclick="alert('Bill Paid Successfully');" name ="generate_bill" class = "btn btn-success" value="Pay Bill"/>
-                              </a>
-                              </td>
-                              </form>
-
-                    
-                      </tr>
-                    <?php }
                     ?>
                 </tbody>
               </table>
