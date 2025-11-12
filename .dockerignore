@@ -1,0 +1,11 @@
+vendor/
+node_modules/
+.git/
+.gitignore
+*.log
+*.zip
+/.cache/
+tmp/
+Dockerfile
+change_author.py
+backup-*
