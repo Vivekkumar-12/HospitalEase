@@ -1,0 +1,22 @@
+# PHP project
+/vendor/
+/node_modules/
+/.env
+.env.local
+.env.*.local
+.idea/
+.vscode/
+*.log
+*.zip
+*.sql
+/.sass-cache/
+/.cache/
+composer.phar
+composer.lock
+Thumbs.db
+desktop.ini
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+coverage/
+/.DS_Store
