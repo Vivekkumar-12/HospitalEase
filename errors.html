@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vercel Errors — Viewer</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial; margin: 24px; }
+    input { padding: 8px; width: 100%; max-width: 480px; margin-bottom: 12px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 12px; }
+    th, td { text-align: left; padding: 8px; border: 1px solid #e6e6e6; }
+    th { background: #f4f4f4; }
+    .meta { color: #666; font-size: 13px; }
+    pre { background: #fafafa; padding: 12px; border: 1px solid #eee; overflow:auto }
+  </style>
+</head>
+<body>
+  <h1>Vercel Error Codes</h1>
+  <p class="meta">This page loads <code>errors/vercel-errors.json</code> and shows a searchable table.</p>
+
+  <input id="q" placeholder="Filter by code or category (type and press Enter)" />
+
+  <div id="count" class="meta"></div>
+  <table id="t">
+    <thead>
+      <tr><th>Code</th><th>Category</th><th>HTTP Status</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <h2>Raw JSON</h2>
+  <pre id="raw">Loading...</pre>
+
+  <script>
+    async function load() {
+      try {
+        const res = await fetch('errors/vercel-errors.json');
+        if (!res.ok) throw new Error('Failed to fetch JSON: ' + res.status);
+        const data = await res.json();
+        window.__vercelErrors = data;
+        renderTable(data);
+        document.getElementById('raw').textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        document.getElementById('raw').textContent = 'Error: ' + err.message;
+      }
+    }
+
+    function renderTable(data, filter) {
+      const tbody = document.querySelector('#t tbody');
+      tbody.innerHTML = '';
+      const keys = Object.keys(data).sort();
+      let shown = 0;
+      for (const k of keys) {
+        const v = data[k];
+        const line = (k + ' ' + v.category + ' ' + v.status).toLowerCase();
+        if (filter && !line.includes(filter)) continue;
+        const tr = document.createElement('tr');
+        const td1 = document.createElement('td'); td1.textContent = k; tr.appendChild(td1);
+        const td2 = document.createElement('td'); td2.textContent = v.category; tr.appendChild(td2);
+        const td3 = document.createElement('td'); td3.textContent = v.status; tr.appendChild(td3);
+        tbody.appendChild(tr);
+        shown++;
+      }
+      document.getElementById('count').textContent = shown + ' / ' + keys.length + ' entries shown';
+    }
+
+    document.getElementById('q').addEventListener('input', (e) => {
+      const q = e.target.value.trim().toLowerCase();
+      renderTable(window.__vercelErrors || {}, q);
+    });
+
+    load();
+  </script>
+</body>
+</html>
