@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "# note": "Removed `builds` that referenced @vercel/php (unavailable). This project now includes a Dockerfile for container deployment.",
   "routes": [
     { "src": "/(.*)", "dest": "/index.php" }
   ]
