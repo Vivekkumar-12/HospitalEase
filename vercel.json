@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "public": ".",
   "routes": [
     { "handle": "filesystem" },
     { "src": "/(.*\\.html?)$", "headers": { "Content-Type": "text/html; charset=utf-8" } },
