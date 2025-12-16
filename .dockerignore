@@ -1,11 +1,7 @@
-vendor/
-node_modules/
-.git/
+.git
 .gitignore
+README.md
+.env
+.vscode
+node_modules
 *.log
-*.zip
-/.cache/
-tmp/
-Dockerfile
-change_author.py
-backup-*

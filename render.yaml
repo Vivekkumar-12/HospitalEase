@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: hospitalease
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DB_HOST
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASS
+        sync: false
+      - key: DB_NAME
+        value: myhmsdb
+
+databases:
+  - name: hospitalease-db
+    plan: free
+    databaseName: myhmsdb
