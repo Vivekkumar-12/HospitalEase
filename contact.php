@@ -1,5 +1,5 @@
-<?php 
-$con=mysqli_connect("localhost","root","","myhmsdb");
+<?php
+require_once __DIR__ . '/include/config.php';
 if(isset($_POST['btnSubmit']))
 {
 	$name = $_POST['txtName'];

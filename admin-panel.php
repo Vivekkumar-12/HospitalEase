@@ -2,7 +2,7 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-$con=mysqli_connect("localhost","root","","myhmsdb");
+require_once __DIR__ . '/include/config.php';
 
 if(!isset($_SESSION['pid'])) {
     header("Location: index.php");

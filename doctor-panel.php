@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <?php 
 include('func1.php');
-$con=mysqli_connect("localhost","root","","myhmsdb");
+require_once __DIR__ . '/include/config.php';
 $doctor = $_SESSION['dname'];
 if(isset($_GET['cancel']))
   {

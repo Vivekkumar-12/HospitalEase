@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<?php 
-$con=mysqli_connect("localhost","root","","myhmsdb");
-
+<?php
+require_once __DIR__ . '/include/config.php';
 include('newfunc.php');
 
 if(isset($_POST['docsub']))
