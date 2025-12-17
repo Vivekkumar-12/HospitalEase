@@ -1,6 +1,6 @@
 <?php
 session_start();
-$con=mysqli_connect("localhost","root","","myhmsdb");
+require_once __DIR__ . '/include/config.php';
 if(isset($_POST['search_submit'])){
   $contact=$_POST['contact'];
   $docname = $_SESSION['dname'];

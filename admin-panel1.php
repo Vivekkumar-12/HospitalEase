@@ -271,7 +271,6 @@ if(isset($_POST['docsub1']))
                 </thead>
                 <tbody>
                   <?php 
-                    $con=mysqli_connect("localhost","root","","myhmsdb");
                     global $con;
                     $query = "select * from doctb";
                     $result = mysqli_query($con,$query);
@@ -322,7 +321,6 @@ if(isset($_POST['docsub1']))
                 </thead>
                 <tbody>
                   <?php 
-                    $con=mysqli_connect("localhost","root","","myhmsdb");
                     global $con;
                     $query = "select * from patreg";
                     $result = mysqli_query($con,$query);
@@ -378,7 +376,6 @@ if(isset($_POST['docsub1']))
                 </thead>
                 <tbody>
                   <?php 
-                    $con=mysqli_connect("localhost","root","","myhmsdb");
                     global $con;
                     $query = "select * from prestb";
                     $result = mysqli_query($con,$query);
