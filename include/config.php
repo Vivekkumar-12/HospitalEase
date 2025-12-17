@@ -153,81 +153,103 @@ class PostgreSQLStatementWrapper {
     }
 }
 
-// Helper functions for backward compatibility
-function mysqli_real_escape_string($con, $string) {
-    if (is_object($con) && method_exists($con, 'real_escape_string')) {
-        return $con->real_escape_string($string);
+// Helper functions for backward compatibility (declare only if not provided by mysqli)
+if (!function_exists('mysqli_real_escape_string')) {
+    function mysqli_real_escape_string($con, $string) {
+        if (is_object($con) && method_exists($con, 'real_escape_string')) {
+            return $con->real_escape_string($string);
+        }
+        return addslashes($string);
     }
-    return addslashes($string);
 }
 
-function mysqli_query($con, $sql) {
-    if (is_object($con) && method_exists($con, 'query')) {
-        return $con->query($sql);
+if (!function_exists('mysqli_query')) {
+    function mysqli_query($con, $sql) {
+        if (is_object($con) && method_exists($con, 'query')) {
+            return $con->query($sql);
+        }
+        return false;
     }
-    return false;
 }
 
-function mysqli_num_rows($result) {
-    if (is_object($result) && method_exists($result, 'num_rows')) {
-        return $result->num_rows();
+if (!function_exists('mysqli_num_rows')) {
+    function mysqli_num_rows($result) {
+        if (is_object($result) && method_exists($result, 'num_rows')) {
+            return $result->num_rows();
+        }
+        return 0;
     }
-    return 0;
 }
 
-function mysqli_fetch_array($result) {
-    if (is_object($result) && method_exists($result, 'fetch_array')) {
-        return $result->fetch_array();
+if (!function_exists('mysqli_fetch_array')) {
+    function mysqli_fetch_array($result, $resulttype = null) {
+        if (is_object($result) && method_exists($result, 'fetch_array')) {
+            return $result->fetch_array();
+        }
+        return false;
     }
-    return false;
 }
 
-function mysqli_fetch_assoc($result) {
-    if (is_object($result) && method_exists($result, 'fetch_assoc')) {
-        return $result->fetch_assoc();
+if (!function_exists('mysqli_fetch_assoc')) {
+    function mysqli_fetch_assoc($result) {
+        if (is_object($result) && method_exists($result, 'fetch_assoc')) {
+            return $result->fetch_assoc();
+        }
+        return false;
     }
-    return false;
 }
 
-function mysqli_prepare($con, $sql) {
-    if (is_object($con) && method_exists($con, 'prepare')) {
-        return $con->prepare($sql);
+if (!function_exists('mysqli_prepare')) {
+    function mysqli_prepare($con, $sql) {
+        if (is_object($con) && method_exists($con, 'prepare')) {
+            return $con->prepare($sql);
+        }
+        return false;
     }
-    return false;
 }
 
-function mysqli_stmt_bind_param($stmt, $types, ...$vars) {
-    if (is_object($stmt) && method_exists($stmt, 'bind_param')) {
-        return $stmt->bind_param($types, ...$vars);
+if (!function_exists('mysqli_stmt_bind_param')) {
+    function mysqli_stmt_bind_param($stmt, $types, ...$vars) {
+        if (is_object($stmt) && method_exists($stmt, 'bind_param')) {
+            return $stmt->bind_param($types, ...$vars);
+        }
+        return false;
     }
-    return false;
 }
 
-function mysqli_stmt_execute($stmt) {
-    if (is_object($stmt) && method_exists($stmt, 'execute')) {
-        return $stmt->execute();
+if (!function_exists('mysqli_stmt_execute')) {
+    function mysqli_stmt_execute($stmt) {
+        if (is_object($stmt) && method_exists($stmt, 'execute')) {
+            return $stmt->execute();
+        }
+        return false;
     }
-    return false;
 }
 
-function mysqli_stmt_close($stmt) {
-    if (is_object($stmt) && method_exists($stmt, 'close')) {
-        return $stmt->close();
+if (!function_exists('mysqli_stmt_close')) {
+    function mysqli_stmt_close($stmt) {
+        if (is_object($stmt) && method_exists($stmt, 'close')) {
+            return $stmt->close();
+        }
+        return false;
     }
-    return false;
 }
 
-function mysqli_stmt_error($stmt) {
-    if (is_object($stmt) && method_exists($stmt, 'error')) {
-        return $stmt->error();
+if (!function_exists('mysqli_stmt_error')) {
+    function mysqli_stmt_error($stmt) {
+        if (is_object($stmt) && method_exists($stmt, 'error')) {
+            return $stmt->error();
+        }
+        return '';
     }
-    return '';
 }
 
-function mysqli_error($con) {
-    if (is_object($con) && method_exists($con, 'error')) {
-        return $con->error();
+if (!function_exists('mysqli_error')) {
+    function mysqli_error($con) {
+        if (is_object($con) && method_exists($con, 'error')) {
+            return $con->error();
+        }
+        return '';
     }
-    return '';
 }
 ?>
