@@ -447,7 +447,6 @@ if(isset($_POST['docsub1']))
                 <tbody>
                   <?php 
 
-                    $con=mysqli_connect("localhost","root","","myhmsdb");
                     global $con;
 
                     $query = "select * from appointmenttb;";
@@ -557,7 +556,6 @@ if(isset($_POST['docsub1']))
                 <tbody>
                   <?php 
 
-                    $con=mysqli_connect("localhost","root","","myhmsdb");
                     global $con;
 
                     $query = "select * from contact;";

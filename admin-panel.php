@@ -333,9 +333,8 @@ function get_specs(){
                 <div class="row">
                   
                   <!-- <?php
-
-                        $con=mysqli_connect("localhost","root","","myhmsdb");
-                        $query=mysqli_query($con,"select username,spec from doctb");
+                        // Commented out - use global $con from config.php
+                        // $query=mysqli_query($con,"select username,spec from doctb");
                         $docarray = array();
                           while($row =mysqli_fetch_assoc($query))
                           {
@@ -491,10 +490,9 @@ function get_specs(){
                 <tbody>
                   <?php 
 
-                    $con=mysqli_connect("localhost","root","","myhmsdb");
                     global $con;
 
-                    $query = "select ID,doctor,docFees,appdate,apptime,userStatus,doctorStatus from appointmenttb where fname ='$fname' and lname='$lname';";
+                    $query = "select ID,doctor,docFees,appdate,apptime,userStatus,doctorStatus from appointmenttb where fname ='$fname' and lname='$lname';";;
                     $result = mysqli_query($con,$query);
                     while ($row = mysqli_fetch_array($result)){
               
@@ -567,10 +565,9 @@ function get_specs(){
                 <tbody>
                   <?php 
 
-                    $con=mysqli_connect("localhost","root","","myhmsdb");
                     global $con;
 
-                    $query = "select doctor,ID,appdate,apptime,disease,allergy,prescription from prestb where pid='$pid';";
+                    $query = "select doctor,ID,appdate,apptime,disease,allergy,prescription from prestb where pid='$pid';";;
                     
                     $result = mysqli_query($con,$query);
                     if(!$result) {
