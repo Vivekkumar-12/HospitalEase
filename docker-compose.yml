@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: hospitalease_web
+    ports:
+      - "9090:80"
+    environment:
+      - USE_MYSQL=true
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASS=root_password
+      - DB_NAME=myhmsdb
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+    networks:
+      - hospitalease_network
+
+  db:
+    image: mysql:8.0
+    container_name: hospitalease_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=myhmsdb
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./myhmsdb.sql:/docker-entrypoint-initdb.d/myhmsdb.sql
+    networks:
+      - hospitalease_network
+
+volumes:
+  db_data:
+
+networks:
+  hospitalease_network:
+    driver: bridge
